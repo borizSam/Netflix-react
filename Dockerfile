@@ -1,20 +1,14 @@
-# Usa Node
-FROM node:18
+# build stage
+FROM node:18 AS build
 
-# Carpeta de trabajo
 WORKDIR /app
-
-# Copiar dependencias
-COPY package*.json ./
-
-# Instalar deps
-RUN npm install --legacy-peer-deps
-
-# Copiar el resto
 COPY . .
+RUN npm install
+RUN npm run build
 
-# Exponer puerto de Vite
-EXPOSE 5173
+# production stage
+FROM nginx:alpine
 
-# Ejecutar Vite
-CMD ["npm", "run", "dev", "--", "--host"]
+COPY --from=build /app/dist /usr/share/nginx/html
+
+EXPOSE 80
