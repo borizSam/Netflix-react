@@ -1,7 +1,9 @@
-# Netflix Clone React.js
+# 🎬 Netflix Clone React.js
 
 ## Overview
-This project is a Netflix clone built using React.js, designed to enhance skills in web development. It features a fully interactive user interface with various functionalities, making it a comprehensive movie-watching experience. The project is powered by TMDB API, utilizing Firebase for database management.
+Este proyecto es un clon de Netflix desarrollado con React.js, diseñado para simular una experiencia moderna de plataforma de streaming.
+
+La aplicación consume datos desde la API de TMDB y utiliza Firebase para autenticación y gestión de usuarios.
 
 ## Screenshots
 
@@ -13,14 +15,14 @@ This project is a Netflix clone built using React.js, designed to enhance skills
 ![mobile screens](https://i.imgur.com/ForTeQi.jpg)
  
 ## Key Functionalities
-- Sign In / Sign Up
-- Home Page for browsing movies
-- My List Section for user-specific movie selections
-- Liked Movies Page
-- Watched Movies Page
-- Profile Page
-- Play Movie Page
-- Search Movie Page
+- 🔐 Registro e inicio de sesión (Firebase Authentication)
+- 🏠 Página principal con catálogo de películas
+- ❤️ Lista personalizada (My List)
+- 👍 Películas favoritas
+- 👁️ Películas vistas
+- 👤 Perfil de usuario
+- ▶️ Reproductor de películas
+- 🔎 Búsqueda de contenido
 
 ## Technologies Used
 - [React.js](https://react.dev/)
@@ -31,8 +33,76 @@ This project is a Netflix clone built using React.js, designed to enhance skills
 - [React-Youtube](https://www.npmjs.com/package/react-youtube)
 - [Tailwind CSS](https://tailwindcss.com/)
 
-## Description
-This Netflix clone project was developed to deepen understanding and proficiency in React.js. Leveraging popular technologies and APIs like TMDB and Firebase, it encompasses a range of features, from user authentication to dynamic movie listings. The design is tailored to provide an immersive streaming experience, and the codebase reflects best practices in modern web development.
+## Soporte con Docker
+El proyecto está dockerizado para facilitar su ejecución y despliegue.
+
+### 📄 Dockerfile
+```
+FROM node:18
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm install --legacy-peer-deps
+
+COPY . .
+
+EXPOSE 5173
+
+CMD ["npm", "run", "dev", "--", "--host"]
+```
+## 🚀 Ejecutar con Docker
+```
+docker build -t netflix-react .
+docker run -p 5173:5173 netflix-react
+```
+👉 Abrir en el navegador:
+```
+http://localhost:5173
+```
+## ⚙️ CI/CD con GitHub Actions
+Este proyecto incluye un pipeline de integración continua que construye y publica la imagen Docker automáticamente en cada push a la rama master.
+
+```
+name: 🚀 CI/CD Frontend Docker 
+on: 
+    push: 
+        branches: 
+            - master 
+jobs: 
+    docker-frontend: 
+        runs-on: ubuntu-latest 
+        
+        steps: 
+            - name: Checkout código 
+            uses: actions/checkout@v3 
+            - name: Login en Docker Hub 
+            uses: docker/login-action@v2 
+            with: 
+                username: ${{ secrets.DOCKER_USERNAME }} 
+                password: ${{ secrets.DOCKER_PASSWORD }} 
+            - name: Build & Push frontend image 
+                uses: docker/build-push-action@v5 
+                with: 
+                    context: . 
+                    file: ./Dockerfile 
+                    push: true 
+                    tags: ${{ secrets.DOCKER_USERNAME }}/aeropuerto-front:latest
+```
+## 🔐 Secrets necesarios
+
+Configura estos secretos en GitHub:
+- DOCKER_USERNAME
+- DOCKER_PASSWORD
 
 ## Link to the Site
 [Netflix Clone](https://movieflix-reactjs.vercel.app/)
+
+## 👨‍💻 Autor
+Este proyecto está basado en un clon original desarrollado por otro autor, utilizado como referencia para aprendizaje.
+Se han realizado modificaciones y mejoras propias, incluyendo:
+
+- Dockerización del proyecto 🐳
+- Configuración de CI/CD con GitHub Actions 🚀
+- Ajustes y correcciones en el código
